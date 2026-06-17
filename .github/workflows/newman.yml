@@ -1,4 +1,4 @@
-name: Newman Contract Tests
+name: Newman Notification Contract Tests
 
 on:
   push:
@@ -22,9 +22,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Lint OpenAPI contract
+        run: npm run lint:openapi
+
       - name: Start Prism mock server
         run: |
-          nohup npm run mock:iot > prism.log 2>&1 &
+          nohup npm run mock:notification > prism.log 2>&1 &
           sleep 5
           cat prism.log
 
@@ -32,7 +35,8 @@ jobs:
         run: npm run test:mock
 
       - name: Upload Newman report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: newman-report
+          name: newman-notification-report
           path: reports/

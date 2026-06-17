@@ -1,28 +1,11 @@
-# Submission Checklist — Lab 03
+# Submission Checklist - Lab 03
 
-Trước khi nộp, repo nhóm cần có:
-
-```text
-contracts/<team>.openapi.yaml
-postman/collections/<team>.postman_collection.json
-postman/environments/<team>_mock.postman_environment.json
-postman/environments/<team>_local.postman_environment.json
-reports/newman-report.xml hoặc reports/newman-report.html
-checklists/reliability_checklist.md
-templates/test-case-matrix.csv
-templates/consumer-provider-handshake.md
-```
-
-## Quy ước commit
-
-Gợi ý commit cuối:
-
-```bash
-git add .
-git commit -m "lab03: add postman contract tests and newman report"
-git push
-```
-
-## Link nộp LMS
-
-Nộp link GitHub repo, không nộp file rời.
+- [x] Contract Notification nằm trong `contracts/notification.openapi.yaml`.
+- [x] Postman collection đã có test happy path, duplicate, auth lỗi, payload lỗi.
+- [x] Có environment mock và local.
+- [x] Có mock-data cho valid, invalid và boundary case.
+- [x] Có GitHub Actions chạy lint + Newman mock.
+- [ ] Đã chạy `npm install` trên máy cá nhân.
+- [ ] Đã chạy `npm run test:mock` và lưu report vào `reports/`.
+- [ ] Đã chụp screenshot Prism/Newman/request-response.
+- [ ] Đã commit và push lên GitHub.
