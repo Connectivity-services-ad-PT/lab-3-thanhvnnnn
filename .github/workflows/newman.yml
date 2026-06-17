@@ -1,42 +1,38 @@
-name: Newman Notification Contract Tests
+name: Contract and Newman Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main, develop]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
-  newman:
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
+          node-version: '20'
+          
       - name: Install dependencies
-        run: npm install
-
-      - name: Lint OpenAPI contract
-        run: npm run lint:openapi
-
+        run: npm ci
+        
+      - name: Lint OpenAPI contracts
+        run: npx spectral lint contracts/*.yaml | tee reports/contract-lint-report.txt
+        
       - name: Start Prism mock server
-        run: |
-          nohup npm run mock:notification > prism.log 2>&1 &
-          sleep 5
-          cat prism.log
-
-      - name: Run Newman contract tests
+        run: nohup npx prism mock contracts/*.yaml --port 4010 > prism.log 2>&1 &
+        
+      - name: Wait for mock server
+        run: npx wait-on http://localhost:4010/health --timeout 30000
+        
+      - name: Run Newman tests
         run: npm run test:mock
-
-      - name: Upload Newman report
-        if: always()
+        
+      - name: Upload reports
         uses: actions/upload-artifact@v4
         with:
-          name: newman-notification-report
+          name: test-reports
           path: reports/

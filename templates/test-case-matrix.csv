@@ -1,9 +1,6 @@
-test_id,category,endpoint,method,scenario,payload,expected_status,expected_assertion,priority,owner,note
-TC01,Health,/health,GET,Service alive,,200,"service=notification",high,team-notify,
-TC02,Functional,/notifications,POST,Create notification happy path,mock-data/notification-valid.json,"202/200","has notification_id",high,team-notify,
-TC03,Duplicate,/notifications,POST,Same dedupe_key,mock-data/notification-valid.json,"200/202","safe duplicate handling",high,team-notify,
-TC04,Auth,/notifications,POST,Missing token,mock-data/notification-valid.json,401,"Problem Details",high,team-notify,
-TC05,Negative,/notifications,POST,Invalid schema,mock-data/notification-invalid-missing-message.json,422,"Problem Details",high,team-notify,
-TC06,Functional,/notifications/{notification_id},GET,Read detail,,200,"attempts array exists",medium,team-notify,
-TC07,Functional,/notifications/{notification_id}/retry,POST,Retry queued notification,,202,"retry_count exists",medium,team-notify,
-TC08,Functional,/templates/security_motion_v1,GET,Read template,,200,"template_code exists",medium,team-notify,
+ID,Folder,Endpoint,Method,Scenario,Input file/body,Expected status,Expected response check,Type,Pass/Fail,Evidence
+TC01,Functional,/health,GET,Service is alive,-,200,status=ok,functional,,
+TC02,Functional,/readings,POST,Create reading happy path,mock-data/sensor-reading-valid.json,201,"has reading_id, accepted=true",functional,,
+TC03,Negative,/readings,POST,Missing device_id,mock-data/sensor-reading-invalid-missing-device.json,400,Problem Details,negative,,
+TC04,Auth,/readings,POST,Missing token,mock-data/sensor-reading-valid.json,401,Problem Details,auth,,
+TC05,Boundary,/readings,POST,High temperature boundary,mock-data/sensor-reading-boundary.json,201/400,documented behavior,boundary,,
