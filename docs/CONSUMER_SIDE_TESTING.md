@@ -1,81 +1,23 @@
-# CONSUMER-SIDE TESTING — Kiểm thử từ phía nhóm gọi API
+# Consumer-side Testing - Notification Service
 
-## 1. Vì sao cần consumer-side test?
+Consumer giả định là Core Business. Khi Core chưa nối queue thật, Core có thể gọi mock server của Notification để kiểm tra payload alert.
 
-Trong hệ thống Smart Campus, không nhóm nào làm việc độc lập hoàn toàn.
+## Lệnh chạy mock
 
-Ví dụ:
-
-```text
-Camera Stream → AI Vision → Core Business → Notification
-IoT Ingestion → Core Business
-IoT Ingestion → Analytics
-Access Gate → Core Business
+```bash
+npm run mock:notification
 ```
 
-Nếu phải chờ provider code xong mới làm tiếp, toàn bộ lớp sẽ bị nghẽn.  
-Vì vậy, consumer cần gọi được **mock API** của provider.
+## Lệnh test
 
----
-
-## 2. Quy trình handshake giữa consumer và provider
-
-### Bước 1 — Provider công bố contract
-
-Provider đưa cho consumer:
-
-```text
-openapi.yaml
-mock_base_url
-auth rule
-example request
-example response
+```bash
+npm run test:mock
 ```
 
-### Bước 2 — Consumer tạo smoke test
+## Điểm cần chứng minh
 
-Consumer tạo ít nhất 1 request gọi mock provider.
-
-Ví dụ Camera gọi AI Vision mock:
-
-```http
-POST {{aiVisionMockUrl}}/detect
-Authorization: Bearer {{authToken}}
-Content-Type: application/json
-
-{
-  "camera_id": "CAM01",
-  "image_url": "https://example.com/frame.jpg"
-}
-```
-
-Expected:
-
-```json
-{
-  "detection_id": "DET001",
-  "label": "person",
-  "confidence": 0.91,
-  "risk_level": "medium"
-}
-```
-
-### Bước 3 — Ghi biên bản
-
-Dùng template:
-
-```text
-templates/consumer-provider-handshake.md
-```
-
----
-
-## 3. Tiêu chí pass
-
-Consumer-side smoke test đạt khi:
-
-- Gọi đúng endpoint của provider.
-- Request body đúng schema.
-- Đọc được field cần dùng trong response.
-- Xử lý được ít nhất 1 lỗi 4xx hoặc 5xx.
-- Có ảnh chụp màn hình hoặc Newman report.
+- Core gửi đúng `alert_id`, `target`, `channels`, `priority`, `title`, `message`.
+- Notification trả `notification_id` và `status`.
+- Payload sai bị trả `422`.
+- Thiếu token bị trả `401`.
+- Có `X-Trace-Id` để đối chiếu log demo.

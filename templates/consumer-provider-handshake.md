@@ -1,57 +1,45 @@
-# Consumer–Provider Handshake
+# Consumer / Provider Handshake - Core Business → Notification
 
-## Thông tin chung
+## 1. Thông tin
 
-- Lab: FIT4110 Lab 03
-- Ngày:
-- Provider team:
-- Consumer team:
-- Provider service:
-- Consumer service:
+- Consumer: Core Business
+- Provider: Notification Service
+- Cơ chế: Queue async, Lab 03 mô phỏng bằng OpenAPI mock
+- Base URL mock: `http://localhost:4010`
+- Base URL local: `http://localhost:8000`
 
-## Contract
-
-- Contract file:
-- Mock base URL:
-- Auth method:
-- Endpoint được test:
-
-## Smoke test
-
-### Request
-
-```http
-METHOD /path
-Authorization: Bearer <token>
-Content-Type: application/json
-```
+## 2. Payload đã thống nhất
 
 ```json
 {
+  "alert_id": "ALERT-20260617-0001",
+  "target": { "kind": "user", "user_id": "staff-security-01" },
+  "channels": ["push", "sms", "email"],
+  "priority": "critical",
+  "title": "Motion detected after hours",
+  "message": "Camera CAM-A01 detected motion in Library Zone B.",
+  "dedupe_key": "motion:CAM-A01:20260617T210000"
 }
 ```
 
-### Expected response
+## 3. Header
 
-```json
-{
-}
+```text
+Authorization: Bearer local-dev-token
+X-Trace-Id: trace-lab-notify-001
 ```
 
-## Kết quả
+## 4. Kết quả mong đợi
 
-- [ ] Consumer gọi mock thành công.
-- [ ] Consumer parse được field cần dùng.
-- [ ] Consumer hiểu lỗi 4xx/5xx provider trả về.
-- [ ] Có Newman report hoặc screenshot.
+- Hợp lệ: `202 Accepted`, có `notification_id`.
+- Duplicate: `200 OK`, status `duplicate`.
+- Thiếu token: `401` Problem Details.
+- Payload sai: `422` Problem Details.
 
-## Ghi chú thay đổi hợp đồng
+## 5. Sign-off
 
-| Nội dung | Trước | Sau | Người đồng ý |
-|---|---|---|---|
-| | | | |
-
-## Xác nhận
-
-- Provider representative:
-- Consumer representative:
+| Vai trò | Nhóm | Đồng ý |
+|---|---|---|
+| Consumer | Core Business | Yes |
+| Provider | Notification | Yes |
+| Witness | Giảng viên/nhóm demo | Pending |

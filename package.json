@@ -1,17 +1,21 @@
-{
-  "name": "fit4110_lab03_postman_mock_testing",
-  "version": "0.3.0",
+﻿{
+  "name": "fit4110-lab03-notification-contract-tests",
+  "version": "1.0.0",
   "private": true,
-  "description": "FIT4110 Lab 03 - Postman, Mock Server, Contract Testing, Newman CI",
+  "description": "FIT4110 Lab 03 Postman/Newman tests for Smart Campus Notification Service",
   "scripts": {
-    "mock:iot": "prism mock contracts/iot-ingestion.openapi.yaml -p 4010 --host 0.0.0.0",
-    "test:mock": "newman run postman/collections/FIT4110_lab03_iot_ingestion.postman_collection.json -e postman/environments/FIT4110_lab03_mock.postman_environment.json --reporters cli,junit --reporter-junit-export reports/newman-report-mock.xml",
-    "test:local": "newman run postman/collections/FIT4110_lab03_iot_ingestion.postman_collection.json -e postman/environments/FIT4110_lab03_local.postman_environment.json --reporters cli,junit --reporter-junit-export reports/newman-report-local.xml",
-    "test:html": "newman run postman/collections/FIT4110_lab03_iot_ingestion.postman_collection.json -e postman/environments/FIT4110_lab03_mock.postman_environment.json --reporters cli,htmlextra --reporter-htmlextra-export reports/newman-report.html"
+    "mock:notification": "prism mock contracts/notification.openapi.yaml --host 0.0.0.0 --port 4010",
+    "lint:openapi": "spectral lint --ruleset .spectral.yaml contracts/notification.openapi.yaml",
+    "test:mock": "newman run postman/collections/FIT4110_lab03_notification.postman_collection.json -e postman/environments/FIT4110_lab03_mock.postman_environment.json -r cli,junit,htmlextra --reporter-junit-export reports/newman-lab03-mock.xml --reporter-htmlextra-export reports/newman-lab03-mock.html",
+    "test:local": "newman run postman/collections/FIT4110_lab03_notification.postman_collection.json -e postman/environments/FIT4110_lab03_local.postman_environment.json -r cli,junit,htmlextra --reporter-junit-export reports/newman-lab03-local.xml --reporter-htmlextra-export reports/newman-lab03-local.html"
   },
   "devDependencies": {
     "@stoplight/prism-cli": "^5.14.2",
+    "@stoplight/spectral-cli": "^6.13.1",
     "newman": "^6.2.1",
-    "newman-reporter-htmlextra": "^1.23.1"
+    "newman-reporter-htmlextra": "^1.23.1",
+    "wait-on": "^8.0.1"
   }
 }
+
+
