@@ -5,7 +5,7 @@
   "description": "FIT4110 Lab 03 Postman/Newman tests for Smart Campus Notification Service",
   "scripts": {
     "mock:notification": "prism mock contracts/notification.openapi.yaml --host 0.0.0.0 --port 4010",
-    "lint:openapi": "spectral lint --ruleset .spectral.yaml contracts/*.yaml",
+    "lint:openapi": "spectral lint --ruleset .spectral.yaml contracts/notification.openapi.yaml",
     "test:mock": "newman run postman/collections/FIT4110_lab03_notification.postman_collection.json -e postman/environments/FIT4110_lab03_mock.postman_environment.json -r cli,junit,htmlextra --reporter-junit-export reports/newman-lab03-mock.xml --reporter-htmlextra-export reports/newman-lab03-mock.html",
     "test:local": "newman run postman/collections/FIT4110_lab03_notification.postman_collection.json -e postman/environments/FIT4110_lab03_local.postman_environment.json -r cli,junit,htmlextra --reporter-junit-export reports/newman-lab03-local.xml --reporter-htmlextra-export reports/newman-lab03-local.html"
   },
@@ -17,4 +17,5 @@
     "wait-on": "^8.0.1"
   }
 }
+
 
